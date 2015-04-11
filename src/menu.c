@@ -1,14 +1,13 @@
 #include <pebble.h>
 
 //first define all the constanstants
-#define NUM_ITEMS_FIRST = 4; //the number of menu items in the first section (Breakfast,Lunch,Dinner,Snacks)
-#define NUM_SECTIONS = 1; //the amount of sections in the menu
-#define NUM_ICONS = 0 ; //the number of icons in the menu
+#define NUM_ITEMS_FIRST 4; //the number of menu items in the first section (Breakfast,Lunch,Dinner,Snacks)
+#define NUM_SECTIONS 1; //the amount of sections in the menu
+#define NUM_ICONS 0 ; //the number of icons in the menu
 
 //the s_ before the variables shows they are static
-static Window *s_menu_window; // the window for the menu
+static Window *s_main_window; // the window for the menu
 static MenuLayer *s_menu_layer; //the main menu for the app
-static GBitMap *s_menu_icons[NUM_ICONS]; //the array of menu icons
 
 
 //create the callback methods to get information about the menu so we can render it
@@ -40,3 +39,108 @@ static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, ui
   }
 }
 
+static void menu_draw_row_callback(GContext *ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data){
+  //render a section to draw insude
+  switch(cell_index->section){
+    case 0:
+    //then figure out the row we're going to draw
+    switch(cell_index->row){
+      case 0:
+      //Breakfast
+        menu_cell_basic_draw(ctx,cell_layer,"Breakfast","Recipes to start your day!",NULL);
+        break;
+      case 1:
+      //Lunch
+        menu_cell_basic_draw(ctx,cell_layer,"Lunch","Recipes for that meal after breakfast",NULL);
+        break;
+      case 2:
+      //Dinner
+        menu_cell_basic_draw(ctx,cell_layer,"Dinner","Recipes for Dinner!",NULL);
+        break;
+      case 3:
+      //Snacks
+        menu_cell_basic_draw(ctx,cell_layer,"Snacks","Recipes for everything in between!",NULL);
+        break;
+    }
+    break;
+  }
+}
+
+//method to handle selecting items in the menu
+static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index,void *data){
+  //find out which row (item) is currently selected
+  switch(cell_index->row){
+    //Breakfast
+    case 0:
+    break;
+    
+    //Lunch
+    case 1:
+    break;
+    
+    //Dinner
+    case 2:
+    break;
+    
+    //Snacks
+    case 3:
+    break;
+  }
+}
+
+//load the window
+static void main_window_load(Window *window){
+  //load any icons
+  
+  //prepare the menu layer
+  Layer *window_layer = window_get_root_layer(window);
+  GRect window_size = layer_get_frame(window_layer);
+  
+  //create the menu layer
+  s_menu_layer = menu_layer_create(window_size);
+    menu_layer_set_callbacks(s_menu_layer, NULL, (MenuLayerCallbacks){
+    .get_num_sections = menu_get_num_sections_callback,
+    .get_num_rows = menu_get_num_rows_callback,
+    .get_header_height = menu_get_header_height_callback,
+    .draw_header = menu_draw_header_callback,
+    .draw_row = menu_draw_row_callback,
+    .select_click = menu_select_callback,
+  });
+  
+  //make the menu clickable
+  menu_layer_set_click_config_onto_window(s_menu_layer, window);
+  
+  //add it to the window
+  layer_add_child(window_layer, menu_layer_get_layer(s_menu_layer));
+  
+}
+
+//unload method to free up resources
+static void main_window_unload(Window *window){
+  menu_layer_destroy(s_menu_layer);
+  
+  //loop through and destory icons if they exist
+}
+
+//init method to start everything
+static void init(){
+  s_main_window = window_create();
+  
+   window_set_window_handlers(s_main_window, (WindowHandlers) {
+    .load = main_window_load,
+    .unload = main_window_unload,
+  });
+  
+  window_stack_push(s_main_window, true);
+}
+
+//deinit to free up window resources
+static void deinit(){
+window_destroy(s_main_window);
+}
+
+int main(void){
+  init();
+  app_event_loop();
+  deinit();
+}
