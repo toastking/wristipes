@@ -8,8 +8,12 @@
 //the s_ before the variables shows they are static
 static Window *s_main_window; // the window for the menu
 static MenuLayer *s_menu_layer; //the main menu for the app
+//multidimensional array with the menu items
+static char* menu_items[] = {"Breakfast","Lunch","Dinner","Snack", "Scrambled Eggs", "Egg Sandwich", "Cereal", "Oatmeal", "PB & Jelly","Grilled Cheese","Soup","Ramen",  "Chicken Parm","Spaghetti","Ramen","Pizza",  "Parfait","Cookies","Muffins","Cereal"};
+static char* data[] = {"Step one:"};
 
-
+int current_menu=0; //the menu of the current array to loop through
+int lengths[] = {4,4,4,4,4};//{4,4,2,2,1}; //the number of items in each menu
 //create the callback methods to get information about the menu so we can render it
 static int s_current_icon = 0;
 
@@ -20,7 +24,7 @@ static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data
 static uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *data){
   switch(section_index){
     case 0:
-      return NUM_ITEMS_FIRST;
+      return lengths[current_menu];
     default:
       return 0;
   }
@@ -47,19 +51,19 @@ static void menu_draw_row_callback(GContext *ctx, const Layer *cell_layer, MenuI
     switch(cell_index->row){
       case 0:
       //Breakfast
-        menu_cell_basic_draw(ctx,cell_layer,"Breakfast","Recipes to start your day!",NULL);
+        menu_cell_basic_draw(ctx,cell_layer,menu_items[current_menu+lengths[current_menu]+0],"",NULL);
         break;
       case 1:
       //Lunch
-        menu_cell_basic_draw(ctx,cell_layer,"Lunch","Recipes for that meal after breakfast",NULL);
+        menu_cell_basic_draw(ctx,cell_layer,menu_items[current_menu+lengths[current_menu]+1],"",NULL);
         break;
       case 2:
       //Dinner
-        menu_cell_basic_draw(ctx,cell_layer,"Dinner","Recipes for Dinner!",NULL);
+        menu_cell_basic_draw(ctx,cell_layer,menu_items[current_menu+lengths[current_menu]+2],"",NULL);
         break;
       case 3:
       //Snacks
-        menu_cell_basic_draw(ctx,cell_layer,"Snacks","Recipes for everything in between!",NULL);
+        menu_cell_basic_draw(ctx,cell_layer,menu_items[current_menu+lengths[current_menu]+3],"",NULL);
         break;
     }
     break;
@@ -72,20 +76,26 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index,vo
   switch(cell_index->row){
     //Breakfast
     case 0:
+      current_menu = 1;
     break;
     
     //Lunch
     case 1:
+    current_menu = 2;
     break;
     
     //Dinner
     case 2:
+    current_menu = 3;
     break;
     
     //Snacks
     case 3:
+    current_menu = 4;
     break;
   }
+  //reload the data
+  menu_layer_reload_data(menu_layer);
 }
 
 //load the window
