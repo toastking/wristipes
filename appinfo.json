@@ -4,13 +4,40 @@
         ""
     ],
     "companyName": "mattdelsig@me.com",
-    "longName": "Wrist Recipes",
+    "longName": "Wristipies",
     "projectType": "native",
     "resources": {
-        "media": []
+        "media": [
+            {
+                "file": "images/Breakfast.png",
+                "name": "BREAKFAST",
+                "type": "png"
+            },
+            {
+                "file": "images/Dinner.png",
+                "name": "DINNER",
+                "type": "png"
+            },
+            {
+                "file": "images/Snacks.png",
+                "name": "SNACKS",
+                "type": "png"
+            },
+            {
+                "file": "images/Lunch.png",
+                "name": "LUNCH",
+                "type": "png"
+            },
+            {
+                "file": "images/Wristipies.png",
+                "menuIcon": true,
+                "name": "MAIN_LOGO",
+                "type": "png"
+            }
+        ]
     },
     "sdkVersion": "2",
-    "shortName": "Wrist Recipes",
+    "shortName": "Wristipes",
     "uuid": "3df62e82-a55a-4f13-bdeb-9ff7cd9acb97",
     "versionCode": 1,
     "versionLabel": "1.0",
